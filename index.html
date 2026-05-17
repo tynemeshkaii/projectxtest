@@ -1131,9 +1131,8 @@
       gap: 3.5rem;
       width: max-content;
       padding: 0.75rem 0;
-      animation: scroll-left 22s linear infinite;
+      will-change: transform;
     }
-    .exchanges-track:hover { animation-play-state: paused; }
     .ex-item { flex-shrink: 0; display: flex; align-items: center; }
     .ex-item img {
       height: 26px;
@@ -1748,6 +1747,49 @@
 </div>
 
 <script>
+  /* ── Exchange logos carousel (RAF-driven, never resets) ── */
+  (function() {
+    var wrapper = document.querySelector('.exchanges-carousel-wrapper');
+    var track   = document.querySelector('.exchanges-track');
+    if (!track || !wrapper) return;
+
+    var pos    = 0;
+    var speed  = 0.6;   // px per frame at 60fps
+    var half   = 0;
+    var raf    = null;
+
+    function measure() {
+      var items = track.querySelectorAll('.ex-item');
+      var count = Math.floor(items.length / 2);
+      var gap   = parseFloat(getComputedStyle(track).gap) || 0;
+      half = 0;
+      for (var i = 0; i < count; i++) half += items[i].offsetWidth + gap;
+    }
+
+    function tick() {
+      pos -= speed;
+      if (half > 0 && pos <= -half) pos += half;
+      track.style.transform = 'translateX(' + pos + 'px)';
+      raf = requestAnimationFrame(tick);
+    }
+
+    wrapper.addEventListener('mouseenter', function() { speed = 0; });
+    wrapper.addEventListener('mouseleave', function() { speed = 0.6; });
+
+    // Start after all images load so measure() is accurate
+    var imgs   = Array.from(track.querySelectorAll('img'));
+    var done   = 0;
+    function onLoad() {
+      done++;
+      if (done >= imgs.length) { measure(); tick(); }
+    }
+    if (!imgs.length) { measure(); tick(); return; }
+    imgs.forEach(function(img) {
+      if (img.complete) { onLoad(); }
+      else { img.addEventListener('load', onLoad); img.addEventListener('error', onLoad); }
+    });
+  })();
+
   /* ── UTM passthrough ── */
   (function() {
     var params = new URLSearchParams(window.location.search);
