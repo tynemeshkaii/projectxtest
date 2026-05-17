@@ -6,17 +6,26 @@
   <title>Boyko Trading — Торговые сигналы</title>
   <meta name="description" content="Бесплатные торговые сигналы с точностью 92%. 3-5 сигналов в день с точками входа, стоп-лосс и тейк-профит. Telegram-канал с AI-аналитикой.">
 
+  <!-- TODO: замени https://boykotrading.ru на свой домен во всех тегах ниже -->
+  <link rel="canonical" href="https://boykotrading.ru/">
+
   <!-- Open Graph -->
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://boykotrading.ru/">
+  <meta property="og:site_name" content="Boyko Trading">
   <meta property="og:title" content="Boyko Trading — 3-5 сигналов в день с точностью 92%">
   <meta property="og:description" content="Бесплатные торговые сигналы с готовыми точками входа. Просто открой сделку — аналитику мы сделали за тебя.">
-  <meta property="og:image" content="trades/2026-05-17 09.23.39.jpg.webp">
+  <meta property="og:image" content="https://boykotrading.ru/trades/2026-05-17%2009.23.39.jpg.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ru_RU">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Boyko Trading — 3-5 сигналов в день с точностью 92%">
   <meta name="twitter:description" content="Бесплатные торговые сигналы с готовыми точками входа.">
+  <meta name="twitter:image" content="https://boykotrading.ru/trades/2026-05-17%2009.23.39.jpg.webp">
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,6 +67,41 @@
       overflow-x: hidden;
     }
 
+    /* ─── Focus & Accessibility ─── */
+    :focus-visible {
+      outline: 2px solid var(--primary-light);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .sr-only:focus-visible {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      width: auto;
+      height: auto;
+      padding: 0.75rem 1.5rem;
+      margin: 0;
+      clip: auto;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      border-radius: var(--radius);
+      z-index: 9999;
+      text-decoration: none;
+    }
+
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
     h1, h2, h3 { line-height: 1.2; font-weight: 800; }
 
@@ -66,9 +110,9 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px var(--primary-glow), 0 0 60px rgba(16,185,129,0.1); }
-      50% { box-shadow: 0 0 35px var(--primary-glow), 0 0 90px rgba(16,185,129,0.18); }
+    @keyframes pulse-opacity {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -148,9 +192,21 @@
     }
     .btn-primary:hover svg:last-child { transform: translateX(4px); }
 
-    /* Hero-only pulse */
+    /* Hero-only pulse — через псевдоэлемент (compositor-only opacity, не box-shadow) */
     .btn-primary.pulse {
-      animation: pulse-glow 3s ease-in-out infinite;
+      position: relative;
+      isolation: isolate;
+    }
+    .btn-primary.pulse::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: calc(var(--radius) + 4px);
+      background: transparent;
+      box-shadow: 0 0 32px var(--primary-glow), 0 0 72px rgba(16,185,129,0.15);
+      animation: pulse-opacity 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
     }
 
     .btn-ghost {
@@ -214,17 +270,25 @@
       font-weight: 800;
       font-size: 1.25rem;
       color: var(--text);
+      white-space: nowrap;
     }
     .header-cta {
       padding: 0.625rem 1.25rem;
       font-size: 0.875rem;
+      white-space: nowrap;
     }
     .header-cta .tg-icon { width: 1rem; height: 1rem; }
+    /* Скрываем текст CTA на очень узких экранах, оставляем иконку */
+    @media (max-width: 479px) {
+      .header-cta-text { display: none; }
+      .header-cta { padding: 0.625rem 0.875rem; }
+    }
 
     /* ─── Hero ─── */
     .hero {
       position: relative;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       padding: 7rem 0 5rem;
@@ -523,9 +587,10 @@
     .results-track {
       display: flex;
       gap: 1rem;
-      animation: scroll-left 32s linear infinite;
+      animation: scroll-left 90s linear infinite;
       width: max-content;
       padding: 1rem 0.625rem;
+      will-change: transform;
     }
     .results-track:hover { animation-play-state: paused; }
 
@@ -627,6 +692,7 @@
       animation: scroll-left 42s linear infinite;
       width: max-content;
       padding: 1rem 0.625rem;
+      will-change: transform;
     }
     .client-results-track:hover { animation-play-state: paused; }
     .client-result-card {
@@ -701,15 +767,15 @@
       align-items: start;
     }
 
-    /* Планшет ≥641px: 2 равных колонки, bento отключён */
-    @media (min-width: 641px) {
+    /* Планшет ≥640px: 2 равных колонки */
+    @media (min-width: 640px) {
       .features-bento {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    /* Десктоп ≥1025px: 3 колонки + bento span */
-    @media (min-width: 1025px) {
+    /* Десктоп ≥1024px: 3 колонки + bento span */
+    @media (min-width: 1024px) {
       .features-bento {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
@@ -866,6 +932,14 @@
       font-weight: 700;
       font-size: 0.875rem;
       color: var(--primary-light);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .testimonial-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .testimonial-card:nth-child(2) .testimonial-avatar { color: var(--accent); }
     .testimonial-card:nth-child(3) .testimonial-avatar { color: var(--violet); }
@@ -1019,6 +1093,18 @@
     }
     .final-cta-benefit svg { width: 1.125rem; height: 1.125rem; color: var(--primary-light); flex-shrink: 0; }
 
+    .final-cta-content {
+      position: relative;
+      z-index: 10;
+    }
+    .final-cta-content .btn-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
     /* ─── Footer ─── */
     .footer {
       padding: 3rem 0;
@@ -1135,18 +1221,20 @@
     }
     .ex-item { flex-shrink: 0; display: flex; align-items: center; }
     .ex-item img {
-      height: 26px;
+      height: 28px;
       width: auto;
       display: block;
       object-fit: contain;
-      opacity: 0.55;
-      transition: opacity 0.3s;
-      filter: grayscale(0.15);
+      opacity: 0.7;
+      transition: opacity 0.3s, filter 0.3s;
+      filter: brightness(0) invert(1);
     }
-    .ex-item:hover img { opacity: 1; filter: none; }
+    .ex-item:hover img { opacity: 1; }
   </style>
 </head>
 <body>
+
+<a href="#main-content" class="sr-only">Перейти к содержимому</a>
 
 <!-- Header -->
 <header class="header">
@@ -1160,15 +1248,15 @@
       </div>
       <span class="logo-text">Boyko Trading</span>
     </a>
-    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary header-cta">
+    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary header-cta" aria-label="Забрать сигнал бесплатно в Telegram">
       <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      Забрать сигнал бесплатно
+      <span class="header-cta-text">Забрать сигнал бесплатно</span>
     </a>
   </div>
 </header>
 
 <!-- Hero -->
-<section class="hero">
+<section id="main-content" class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <!-- Floating orbs -->
@@ -1188,8 +1276,7 @@
           <span class="live-count" id="liveCount">143</span>&nbsp;человек подписались сегодня
         </div>
         <h1 class="animate-fade-up delay-1">
-          <span class="gradient-text">Получай по 3-5 сигналов в день</span><br>
-          с точностью 92%
+          <span class="gradient-text">Получай по 3-5 сигналов в день</span> с точностью 92%
         </h1>
         <p class="hero-subtitle animate-fade-up delay-2">
           Готовые точки входа с уровнями стоп-лосс и тейк-профит. Просто открой сделку — всю аналитику мы уже сделали за тебя.
@@ -1238,7 +1325,7 @@
         <div class="stat-label">Опыт торговли</div>
       </div>
       <div class="stat-item">
-        <div class="stat-value" data-target="5247" data-suffix="+" aria-label="5247 активных трейдеров">5 247+</div>
+        <div class="stat-value" data-target="5247" data-suffix="+" aria-label="Более 5247 активных трейдеров">5 247+</div>
         <div class="stat-label">Активных трейдеров</div>
       </div>
     </div>
@@ -1303,7 +1390,7 @@
         </div>
         <div class="tg-preview-body">
           <div class="tg-msg tg-msg-signal">
-            <strong>BTCUSDT | Long | 77X</strong><br><br>
+            <strong>BTCUSDT | Long | 10X</strong><br><br>
             Точка входа: <strong>79 192.4</strong><br>
             Стоп-лосс: <strong>78 450.0</strong><br>
             Тейк-профит 1: <strong>80 500.0</strong><br>
@@ -1347,90 +1434,141 @@
   <div class="results-track-wrapper reveal" aria-label="Результаты сигналов">
     <div class="results-track">
       <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.47.11.jpg.webp" alt="FARTCOINUSDT Long +2695%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">FARTCOIN/USDT</span><span class="result-card-profit">+2695.05%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.54.24.jpg.webp" alt="TONUSDT Long +773%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">TON/USDT</span><span class="result-card-profit">+773.17%</span></div>
+      </div>
+      <div class="result-card">
         <img class="result-card-img" src="trades/2026-05-17 09.23.39.jpg.webp" alt="STRKUSDT Long +720%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">STRK/USDT</span>
-          <span class="result-card-profit">+720.83%</span>
-        </div>
+        <div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+720.83%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.47.55.jpg.webp" alt="TONUSDT Long +708%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">TON/USDT</span><span class="result-card-profit">+708.97%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 09.24.17.jpg.webp" alt="TURTLEUSDT Long +680%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">TURTLE/USDT</span><span class="result-card-profit">+680.00%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.55.54.jpg.webp" alt="CAKEUSDT Long +333%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">CAKE/USDT</span><span class="result-card-profit">+333.37%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 09.24.13.jpg.webp" alt="STRKUSDT Long +302%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+302.95%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.47.03.jpg.webp" alt="BTCUSDT Short +271%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+271.82%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.55.21.jpg.webp" alt="XMRUSDT Long +220%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">XMR/USDT</span><span class="result-card-profit">+220.96%</span></div>
       </div>
       <div class="result-card">
         <img class="result-card-img" src="trades/2026-05-17 09.23.19.jpg.webp" alt="BTCUSDT Long +215%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">BTC/USDT</span>
-          <span class="result-card-profit">+215.86%</span>
-        </div>
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+215.86%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.56.00.jpg.webp" alt="BTCUSDT Long +216%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+216.03%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.42.56.jpg.webp" alt="STRKUSDT Long +178%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+178.02%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.43.26.jpg.webp" alt="BTCUSDT Long +172%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+172.15%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.53.35.jpg.webp" alt="BTCUSDT Long +154%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+154.11%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.55.42.jpg.webp" alt="CAKEUSDT Long +150%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">CAKE/USDT</span><span class="result-card-profit">+150.23%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.44.24.jpg.webp" alt="BTCUSDT Long +163%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+163.99%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 09.24.09.jpg.webp" alt="LDOUSDT Long +114%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">LDO/USDT</span><span class="result-card-profit">+114.13%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.54.58.jpg.webp" alt="FLOWUSDT Long +103%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">FLOW/USDT</span><span class="result-card-profit">+103.25%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.43.34.jpg.webp" alt="STRKUSDT Long +87%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+87.84%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 09.24.06.jpg.webp" alt="TRBUSDT Long +82%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">TRB/USDT</span><span class="result-card-profit">+82.06%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.43.41.jpg.webp" alt="LDOUSDT Long +81%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">LDO/USDT</span><span class="result-card-profit">+81.47%</span></div>
       </div>
       <div class="result-card">
         <img class="result-card-img" src="trades/2026-05-17 09.24.00.jpg.webp" alt="1000PEPEUSDT Long +69%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">1000PEPE/USDT</span>
-          <span class="result-card-profit">+69.96%</span>
-        </div>
-      </div>
-      <div class="result-card">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.48.jpg.webp" alt="WIFUSDT Long +59%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">WIF/USDT</span>
-          <span class="result-card-profit">+59.06%</span>
-        </div>
+        <div class="result-card-info"><span class="result-card-pair">1000PEPE/USDT</span><span class="result-card-profit">+69.96%</span></div>
       </div>
       <div class="result-card">
         <img class="result-card-img" src="trades/2026-05-17 09.23.56.jpg.webp" alt="ZKUSDT Long +59%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">ZK/USDT</span>
-          <span class="result-card-profit">+59.42%</span>
-        </div>
+        <div class="result-card-info"><span class="result-card-pair">ZK/USDT</span><span class="result-card-profit">+59.42%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.55.27.jpg.webp" alt="BTCUSDT Long +58%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+58.06%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 09.23.48.jpg.webp" alt="WIFUSDT Long +59%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">WIF/USDT</span><span class="result-card-profit">+59.06%</span></div>
+      </div>
+      <div class="result-card">
+        <img class="result-card-img" src="trades/2026-05-17 18.47.42.jpg.webp" alt="BROCCOLIUSDT Long +51%" width="300" height="250" loading="lazy">
+        <div class="result-card-info"><span class="result-card-pair">BROCCOLI/USDT</span><span class="result-card-profit">+51.16%</span></div>
       </div>
       <div class="result-card">
         <img class="result-card-img" src="trades/2026-05-17 09.23.53.jpg.webp" alt="BROCCOLIUSDT Long +54%" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">BROCCOLI/USDT</span>
-          <span class="result-card-profit">+54.25%</span>
-        </div>
+        <div class="result-card-info"><span class="result-card-pair">BROCCOLI/USDT</span><span class="result-card-profit">+54.25%</span></div>
       </div>
       <!-- Duplicate for seamless loop -->
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.39.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">STRK/USDT</span>
-          <span class="result-card-profit">+720.83%</span>
-        </div>
-      </div>
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.19.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">BTC/USDT</span>
-          <span class="result-card-profit">+215.86%</span>
-        </div>
-      </div>
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.24.00.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">1000PEPE/USDT</span>
-          <span class="result-card-profit">+69.96%</span>
-        </div>
-      </div>
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.48.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">WIF/USDT</span>
-          <span class="result-card-profit">+59.06%</span>
-        </div>
-      </div>
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.56.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">ZK/USDT</span>
-          <span class="result-card-profit">+59.42%</span>
-        </div>
-      </div>
-      <div class="result-card" aria-hidden="true">
-        <img class="result-card-img" src="trades/2026-05-17 09.23.53.jpg.webp" alt="" width="300" height="250" loading="lazy">
-        <div class="result-card-info">
-          <span class="result-card-pair">BROCCOLI/USDT</span>
-          <span class="result-card-profit">+54.25%</span>
-        </div>
-      </div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.47.11.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">FARTCOIN/USDT</span><span class="result-card-profit">+2695.05%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.54.24.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">TON/USDT</span><span class="result-card-profit">+773.17%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.23.39.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+720.83%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.47.55.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">TON/USDT</span><span class="result-card-profit">+708.97%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.24.17.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">TURTLE/USDT</span><span class="result-card-profit">+680.00%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.55.54.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">CAKE/USDT</span><span class="result-card-profit">+333.37%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.24.13.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+302.95%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.47.03.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+271.82%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.55.21.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">XMR/USDT</span><span class="result-card-profit">+220.96%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.23.19.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+215.86%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.56.00.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+216.03%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.42.56.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+178.02%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.43.26.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+172.15%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.53.35.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+154.11%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.55.42.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">CAKE/USDT</span><span class="result-card-profit">+150.23%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.44.24.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+163.99%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.24.09.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">LDO/USDT</span><span class="result-card-profit">+114.13%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.54.58.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">FLOW/USDT</span><span class="result-card-profit">+103.25%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.43.34.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">STRK/USDT</span><span class="result-card-profit">+87.84%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.24.06.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">TRB/USDT</span><span class="result-card-profit">+82.06%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.43.41.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">LDO/USDT</span><span class="result-card-profit">+81.47%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.24.00.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">1000PEPE/USDT</span><span class="result-card-profit">+69.96%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.23.56.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">ZK/USDT</span><span class="result-card-profit">+59.42%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.55.27.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BTC/USDT</span><span class="result-card-profit">+58.06%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.23.48.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">WIF/USDT</span><span class="result-card-profit">+59.06%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 18.47.42.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BROCCOLI/USDT</span><span class="result-card-profit">+51.16%</span></div></div>
+      <div class="result-card" aria-hidden="true"><img class="result-card-img" src="trades/2026-05-17 09.23.53.jpg.webp" alt="" width="300" height="250" loading="lazy"><div class="result-card-info"><span class="result-card-pair">BROCCOLI/USDT</span><span class="result-card-profit">+54.25%</span></div></div>
     </div>
   </div>
   <div class="container section-cta reveal">
@@ -1490,7 +1628,7 @@
     <div class="testimonials-grid">
       <div class="testimonial-card reveal">
         <div class="testimonial-header">
-          <div class="testimonial-avatar" aria-hidden="true">АК</div>
+          <div class="testimonial-avatar"><img src="people/1_512.webp" alt="Алексей К." loading="lazy"></div>
           <div class="testimonial-stars" aria-label="Оценка 5 из 5">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1507,7 +1645,7 @@
       </div>
       <div class="testimonial-card reveal">
         <div class="testimonial-header">
-          <div class="testimonial-avatar" aria-hidden="true">МС</div>
+          <div class="testimonial-avatar"><img src="people/2_512.webp" alt="Марина С." loading="lazy"></div>
           <div class="testimonial-stars" aria-label="Оценка 5 из 5">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1524,7 +1662,7 @@
       </div>
       <div class="testimonial-card reveal">
         <div class="testimonial-header">
-          <div class="testimonial-avatar" aria-hidden="true">ДВ</div>
+          <div class="testimonial-avatar"><img src="people/3_512.webp" alt="Дмитрий В." loading="lazy"></div>
           <div class="testimonial-stars" aria-label="Оценка 5 из 5">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1548,6 +1686,7 @@
   <div class="container">
     <div class="section-header reveal">
       <h2>Почему выбирают нас?</h2>
+      <p>Технологии, опыт и поддержка — всё в одном бесплатном канале</p>
       <div class="section-divider" aria-hidden="true"></div>
     </div>
     <div class="features-bento">
@@ -1620,65 +1759,65 @@
     </div>
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-1" aria-expanded="false">
           Это действительно бесплатно? В чём подвох?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-1">
           <p>Да, полностью бесплатно. Подвоха нет — мы зарабатываем на реферальных программах бирж. Когда ты регистрируешься по нашей ссылке, биржа платит нам комиссию. Тебе это ничего не стоит, а мы можем давать сигналы бесплатно.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-2" aria-expanded="false">
           Я полный новичок — смогу разобраться?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-2">
           <p>Да. Каждый сигнал содержит точку входа, стоп-лосс и тейк-профит — просто следуй инструкции. Для новичков есть обучающие материалы и поддержка, которая ответит на любой вопрос за 15 минут.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-3" aria-expanded="false">
           Какой минимальный депозит нужен для начала?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-3">
           <p>Рекомендуем начинать от $100, но можно и с меньшей суммы. Главное — соблюдать риск-менеджмент и не рисковать более 2-3% депозита на одну сделку.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-4" aria-expanded="false">
           Сколько времени нужно уделять сигналам каждый день?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-4">
           <p>10–15 минут в день. Сигнал приходит с готовыми параметрами — тебе остаётся только открыть сделку на бирже по указанным значениям. Всю аналитику AI делает за тебя круглосуточно.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-5" aria-expanded="false">
           Вы гарантируете прибыль?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-5">
           <p>Никто не может гарантировать прибыль на финансовых рынках — и любой, кто обещает обратное, лжёт. Мы гарантируем точность алгоритма 92% на дистанции и строгое управление рисками в каждом сигнале. При соотношении риск/прибыль 2:1 одна успешная сделка перекрывает убыток от двух неудачных.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-6" aria-expanded="false">
           Что если сигнал не сработал и цена дошла до стоп-лосса?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-6">
           <p>Это нормальная часть трейдинга — убыточные сделки бывают у всех. Именно поэтому каждый сигнал идёт с чётким стоп-лоссом, который ограничивает максимальный убыток заранее. Главное — соблюдать риск-менеджмент и не рисковать более 2-3% депозита на сделку.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question" aria-expanded="false" onclick="toggleFaq(this)">
+        <button class="faq-question" id="faq-q-7" aria-expanded="false">
           Как давно работает канал? Сколько подписчиков?
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="faq-answer" role="region">
+        <div class="faq-answer" role="region" aria-labelledby="faq-q-7">
           <p>Канал работает с 2021 года. За это время через него прошли тысячи трейдеров — от новичков до опытных. Сейчас в канале 5 247+ активных подписчиков, которые ежедневно получают сигналы и следят за результатами.</p>
         </div>
       </div>
@@ -1692,7 +1831,7 @@
   <div class="final-cta-orb final-cta-orb-1" aria-hidden="true"></div>
   <div class="final-cta-orb final-cta-orb-2" aria-hidden="true"></div>
   <div class="final-cta-orb final-cta-orb-3" aria-hidden="true"></div>
-  <div class="container" style="position: relative; z-index: 10;">
+  <div class="container final-cta-content">
     <div class="reveal">
       <div class="urgency-badge">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -1714,7 +1853,7 @@
           Поддержка 24/7
         </span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;">
+      <div class="btn-group">
         <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary pulse">
           <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
           Забрать сигнал бесплатно
@@ -1728,9 +1867,9 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-links">
-      <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A">Telegram</a>
-      <a href="#">Политика конфиденциальности</a>
-      <a href="#">Пользовательское соглашение</a>
+      <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer">Telegram</a>
+      <a href="/privacy.html">Политика конфиденциальности</a>
+      <a href="/terms.html">Пользовательское соглашение</a>
     </div>
     <p class="footer-disclaimer">
       Торговля на финансовых рынках сопряжена с высоким уровнем риска и может привести к потере инвестированных средств. Прошлые результаты не гарантируют будущую доходность. Информация на данном сайте не является инвестиционной рекомендацией. Вы несёте полную ответственность за свои торговые решения.
@@ -1747,68 +1886,75 @@
 </div>
 
 <script>
-  /* ── Exchange logos carousel (RAF-driven, never resets) ── */
-  (function() {
-    var wrapper = document.querySelector('.exchanges-carousel-wrapper');
-    var track   = document.querySelector('.exchanges-track');
+(function () {
+  'use strict';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Exchange logos carousel (RAF-driven, pauses when off-screen) ── */
+  (function () {
+    const wrapper = document.querySelector('.exchanges-carousel-wrapper');
+    const track   = document.querySelector('.exchanges-track');
     if (!track || !wrapper) return;
 
-    var pos    = 0;
-    var speed  = 0.6;   // px per frame at 60fps
-    var half   = 0;
-    var raf    = null;
+    let pos    = 0;
+    let speed  = prefersReducedMotion ? 0 : 0.6;
+    let half   = 0;
+    let raf    = null;
+    let active = false;
 
     function measure() {
-      var items = track.querySelectorAll('.ex-item');
-      var count = Math.floor(items.length / 2);
-      var gap   = parseFloat(getComputedStyle(track).gap) || 0;
+      const items = track.querySelectorAll('.ex-item');
+      const count = Math.floor(items.length / 2);
+      const gap   = parseFloat(getComputedStyle(track).gap) || 0;
       half = 0;
-      for (var i = 0; i < count; i++) half += items[i].offsetWidth + gap;
+      for (let i = 0; i < count; i++) half += items[i].offsetWidth + gap;
     }
 
     function tick() {
+      if (!active) { raf = null; return; }
       pos -= speed;
       if (half > 0 && pos <= -half) pos += half;
       track.style.transform = 'translateX(' + pos + 'px)';
       raf = requestAnimationFrame(tick);
     }
 
-    wrapper.addEventListener('mouseenter', function() { speed = 0; });
-    wrapper.addEventListener('mouseleave', function() { speed = 0.6; });
+    function start() { if (!raf) { active = true; raf = requestAnimationFrame(tick); } }
+    function stop()  { active = false; }
 
-    // Start after all images load so measure() is accurate
-    var imgs   = Array.from(track.querySelectorAll('img'));
-    var done   = 0;
-    function onLoad() {
-      done++;
-      if (done >= imgs.length) { measure(); tick(); }
-    }
-    if (!imgs.length) { measure(); tick(); return; }
-    imgs.forEach(function(img) {
-      if (img.complete) { onLoad(); }
-      else { img.addEventListener('load', onLoad); img.addEventListener('error', onLoad); }
-    });
+    wrapper.addEventListener('mouseenter', () => { speed = 0; });
+    wrapper.addEventListener('mouseleave', () => { speed = prefersReducedMotion ? 0 : 0.6; });
+
+    const visIO = new IntersectionObserver(([e]) => {
+      e.isIntersecting ? start() : stop();
+    }, { threshold: 0 });
+    visIO.observe(wrapper);
+
+    const imgs = Array.from(track.querySelectorAll('img'));
+    let done   = 0;
+    function onLoad() { if (++done >= imgs.length) { measure(); start(); } }
+    if (!imgs.length) { measure(); start(); return; }
+    imgs.forEach(img => img.complete ? onLoad() : (img.addEventListener('load', onLoad), img.addEventListener('error', onLoad)));
   })();
 
   /* ── UTM passthrough ── */
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-    var parts = keys.filter(function(k){ return params.has(k); })
-                    .map(function(k){ return k + '=' + encodeURIComponent(params.get(k)); });
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const keys   = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    const parts  = keys.filter(k => params.has(k)).map(k => k + '=' + encodeURIComponent(params.get(k)));
     if (!parts.length) return;
-    var query = parts.join('&');
-    document.querySelectorAll('a[href*="t.me"]').forEach(function(a) {
-      a.href += (a.href.indexOf('?') !== -1 ? '&' : '?') + query;
+    const query = parts.join('&');
+    document.querySelectorAll('a[href*="t.me"]').forEach(a => {
+      a.href += (a.href.includes('?') ? '&' : '?') + query;
     });
   })();
 
   /* ── Live counter ── */
-  var liveEl = document.getElementById('liveCount');
-  if (liveEl) liveEl.textContent = (130 + Math.floor(Math.random() * 40));
+  const liveEl = document.getElementById('liveCount');
+  if (liveEl) liveEl.textContent = 130 + Math.floor(Math.random() * 40);
 
   /* ── Scroll reveal ── */
-  const revealObserver = new IntersectionObserver((entries) => {
+  const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
@@ -1822,22 +1968,26 @@
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
   function animateCounter(el) {
-    const target = parseFloat(el.dataset.target);
-    const suffix = el.dataset.suffix || '';
+    const target   = parseFloat(el.dataset.target);
+    const suffix   = el.dataset.suffix || '';
+
+    if (prefersReducedMotion) {
+      el.textContent = target.toLocaleString('ru-RU') + suffix;
+      return;
+    }
+
     const duration = 1800;
-    const start = performance.now();
+    const start    = performance.now();
 
     function update(now) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const value = Math.round(easeOutCubic(progress) * target);
-      el.textContent = value.toLocaleString('ru-RU') + suffix;
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round(easeOutCubic(progress) * target).toLocaleString('ru-RU') + suffix;
       if (progress < 1) requestAnimationFrame(update);
     }
     requestAnimationFrame(update);
   }
 
-  const counterObserver = new IntersectionObserver((entries) => {
+  const counterObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !entry.target.dataset.animated) {
         entry.target.dataset.animated = 'true';
@@ -1849,18 +1999,21 @@
   document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
 
   /* ── FAQ accordion ── */
-  function toggleFaq(btn) {
-    const item = btn.parentElement;
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item   = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
-    if (!isOpen) {
-      item.classList.add('open');
-      btn.setAttribute('aria-expanded', 'true');
-    }
-  }
+  });
+})();
 </script>
 </body>
 </html>
