@@ -256,21 +256,11 @@
       gap: 0.625rem;
       text-decoration: none;
     }
-    .logo-icon {
-      width: 2.25rem;
-      height: 2.25rem;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border-radius: 0.625rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 16px rgba(16,185,129,0.25);
-    }
-    .logo-text {
-      font-weight: 800;
-      font-size: 1.25rem;
-      color: var(--text);
-      white-space: nowrap;
+    .logo-img {
+      height: 2.5rem;
+      width: auto;
+      display: block;
+      object-fit: contain;
     }
     .header-cta {
       padding: 0.625rem 1.25rem;
@@ -1134,6 +1124,114 @@
       line-height: 1.7;
     }
 
+    /* ─── Legal Modal ─── */
+    .legal-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-out);
+    }
+    .legal-modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .legal-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 680px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.3s var(--ease-out);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+    .legal-modal-overlay.open .legal-modal {
+      transform: translateY(0) scale(1);
+    }
+    .legal-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .legal-modal-header h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .legal-modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.375rem;
+      border-radius: 0.5rem;
+      line-height: 0;
+      transition: color 0.2s, background 0.2s;
+    }
+    .legal-modal-close:hover { color: var(--text); background: var(--bg-secondary); }
+    .legal-modal-body {
+      overflow-y: auto;
+      padding: 1.75rem;
+      flex: 1;
+      scroll-behavior: smooth;
+    }
+    .legal-modal-body h3 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin: 1.5rem 0 0.5rem;
+    }
+    .legal-modal-body h3:first-child { margin-top: 0; }
+    .legal-modal-body p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+    .legal-modal-body ul {
+      padding-left: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .legal-modal-body ul li {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 0.25rem;
+    }
+    .legal-modal-footer {
+      padding: 1rem 1.75rem;
+      border-top: 1px solid var(--border);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .legal-modal-footer button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.625rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .legal-modal-footer button:hover { background: var(--primary-light); }
+
     /* ─── Floating mobile CTA ─── */
     .floating-cta {
       display: none;
@@ -1240,13 +1338,7 @@
 <header class="header">
   <div class="container header-inner">
     <a href="#" class="logo">
-      <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-          <polyline points="16 7 22 7 22 13"></polyline>
-        </svg>
-      </div>
-      <span class="logo-text">Boyko Trading</span>
+      <img src="logo.webp" alt="Boyko Trading" class="logo-img">
     </a>
     <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary header-cta" aria-label="Забрать сигнал бесплатно в Telegram">
       <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
@@ -1285,10 +1377,6 @@
           <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary pulse">
             <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
             Забрать сигнал бесплатно
-          </a>
-          <a href="#how-it-works" class="btn-ghost">
-            Как это работает
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </a>
         </div>
         <div class="trust-pills animate-fade-up delay-4">
@@ -1863,13 +1951,124 @@
   </div>
 </section>
 
+<!-- Privacy Modal -->
+<div id="modal-privacy" class="legal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-privacy-title">
+  <div class="legal-modal">
+    <div class="legal-modal-header">
+      <h2 id="modal-privacy-title">Политика конфиденциальности</h2>
+      <button class="legal-modal-close" aria-label="Закрыть">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="legal-modal-body">
+      <p>Дата вступления в силу: 17 мая 2026 г.</p>
+
+      <h3>1. Общие положения</h3>
+      <p>Настоящая Политика конфиденциальности (далее — «Политика») описывает, как Boyko Trading (далее — «мы», «нас», «наш») собирает, использует и защищает персональные данные пользователей сайта boykotrading.ru (далее — «Сайт»).</p>
+
+      <h3>2. Какие данные мы собираем</h3>
+      <ul>
+        <li>Технические данные: IP-адрес, тип браузера, операционная система, страницы посещений, время сессий.</li>
+        <li>Данные аналитики: агрегированная статистика использования Сайта через сервисы веб-аналитики.</li>
+        <li>Данные из Telegram: при переходе в наш Telegram-канал обработка данных осуществляется на стороне Telegram в соответствии с их политикой конфиденциальности.</li>
+      </ul>
+
+      <h3>3. Цели обработки данных</h3>
+      <ul>
+        <li>Обеспечение корректной работы Сайта.</li>
+        <li>Анализ посещаемости и улучшение пользовательского опыта.</li>
+        <li>Защита от мошенничества и несанкционированного доступа.</li>
+      </ul>
+
+      <h3>4. Файлы cookie</h3>
+      <p>Сайт может использовать технические и аналитические cookie-файлы. Продолжая использование Сайта, вы соглашаетесь с применением cookie. Вы вправе отключить cookie в настройках браузера, однако это может повлиять на работу отдельных функций Сайта.</p>
+
+      <h3>5. Передача данных третьим лицам</h3>
+      <p>Мы не продаём и не передаём ваши персональные данные третьим лицам, за исключением случаев, прямо предусмотренных законодательством Российской Федерации.</p>
+
+      <h3>6. Хранение данных</h3>
+      <p>Технические данные хранятся не дольше, чем это необходимо для достижения целей обработки, но не более 12 месяцев.</p>
+
+      <h3>7. Ваши права</h3>
+      <p>В соответствии с действующим законодательством вы вправе запросить доступ, исправление или удаление ваших персональных данных. Для этого свяжитесь с нами через Telegram.</p>
+
+      <h3>8. Изменения Политики</h3>
+      <p>Мы оставляем за собой право вносить изменения в настоящую Политику. Актуальная версия всегда доступна на данной странице. Продолжение использования Сайта после публикации изменений означает ваше согласие с обновлённой Политикой.</p>
+
+      <h3>9. Контакты</h3>
+      <p>По всем вопросам, связанным с обработкой персональных данных, обращайтесь через наш Telegram-канал.</p>
+    </div>
+    <div class="legal-modal-footer">
+      <button type="button">Понятно</button>
+    </div>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div id="modal-terms" class="legal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-terms-title">
+  <div class="legal-modal">
+    <div class="legal-modal-header">
+      <h2 id="modal-terms-title">Пользовательское соглашение</h2>
+      <button class="legal-modal-close" aria-label="Закрыть">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="legal-modal-body">
+      <p>Дата вступления в силу: 17 мая 2026 г.</p>
+
+      <h3>1. Предмет соглашения</h3>
+      <p>Настоящее Пользовательское соглашение (далее — «Соглашение») регулирует условия использования сайта boykotrading.ru и связанных с ним сервисов, включая Telegram-канал Boyko Trading (далее совместно — «Сервис»).</p>
+
+      <h3>2. Принятие условий</h3>
+      <p>Используя Сайт или вступая в Telegram-канал, вы подтверждаете, что ознакомились с настоящим Соглашением и безоговорочно принимаете его условия. Если вы не согласны с условиями, пожалуйста, прекратите использование Сервиса.</p>
+
+      <h3>3. Характер предоставляемой информации</h3>
+      <p>Вся информация, публикуемая в рамках Сервиса, носит исключительно информационный и образовательный характер. Она <strong style="color:var(--text)">не является</strong>:</p>
+      <ul>
+        <li>индивидуальной инвестиционной рекомендацией;</li>
+        <li>предложением о покупке или продаже финансовых инструментов;</li>
+        <li>гарантией получения прибыли.</li>
+      </ul>
+
+      <h3>4. Риски и ответственность</h3>
+      <p>Торговля на финансовых рынках сопряжена с высоким уровнем риска и может привести к частичной или полной потере инвестированных средств. Вы принимаете самостоятельные торговые решения и несёте за них полную ответственность.</p>
+      <p>Boyko Trading не несёт ответственности за любые прямые или косвенные убытки, возникшие в результате использования информации из Сервиса.</p>
+
+      <h3>5. Возраст пользователей</h3>
+      <p>Использование Сервиса разрешено лицам, достигшим 18 лет. Используя Сервис, вы подтверждаете, что соответствуете данному требованию.</p>
+
+      <h3>6. Интеллектуальная собственность</h3>
+      <p>Все материалы Сервиса (тексты, графика, аналитика, логотипы) являются собственностью Boyko Trading. Их воспроизведение, распространение или использование в коммерческих целях без письменного разрешения запрещено.</p>
+
+      <h3>7. Запрещённые действия</h3>
+      <ul>
+        <li>Копирование и перепродажа сигналов и аналитических материалов третьим лицам.</li>
+        <li>Использование Сервиса в целях, противоречащих законодательству РФ.</li>
+        <li>Любые действия, нарушающие работу Сервиса или ущемляющие права других пользователей.</li>
+      </ul>
+
+      <h3>8. Изменение условий</h3>
+      <p>Мы вправе в любое время изменять условия настоящего Соглашения. Изменения вступают в силу с момента публикации обновлённой версии на Сайте. Продолжение использования Сервиса означает согласие с изменениями.</p>
+
+      <h3>9. Применимое право</h3>
+      <p>Настоящее Соглашение регулируется законодательством Российской Федерации. Все споры разрешаются в претензионном порядке, а при недостижении согласия — в суде по месту нахождения Boyko Trading.</p>
+
+      <h3>10. Контакты</h3>
+      <p>По вопросам, связанным с настоящим Соглашением, обращайтесь через Telegram-канал.</p>
+    </div>
+    <div class="legal-modal-footer">
+      <button type="button">Понятно</button>
+    </div>
+  </div>
+</div>
+
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
     <div class="footer-links">
       <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer">Telegram</a>
-      <a href="/privacy.html">Политика конфиденциальности</a>
-      <a href="/terms.html">Пользовательское соглашение</a>
+      <a href="#" data-modal="modal-privacy">Политика конфиденциальности</a>
+      <a href="#" data-modal="modal-terms">Пользовательское соглашение</a>
     </div>
     <p class="footer-disclaimer">
       Торговля на финансовых рынках сопряжена с высоким уровнем риска и может привести к потере инвестированных средств. Прошлые результаты не гарантируют будущую доходность. Информация на данном сайте не является инвестиционной рекомендацией. Вы несёте полную ответственность за свои торговые решения.
@@ -1997,6 +2196,43 @@
     });
   }, { threshold: 0.6 });
   document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  /* ── Legal modals ── */
+  (function () {
+    function openModal(id) {
+      const overlay = document.getElementById(id);
+      if (!overlay) return;
+      overlay.classList.add('open');
+      overlay.querySelector('.legal-modal-body').scrollTop = 0;
+      document.body.style.overflow = 'hidden';
+      const firstFocusable = overlay.querySelector('button');
+      if (firstFocusable) firstFocusable.focus();
+    }
+
+    function closeModal(overlay) {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-modal]').forEach(trigger => {
+      trigger.addEventListener('click', e => {
+        e.preventDefault();
+        openModal(trigger.dataset.modal);
+      });
+    });
+
+    document.querySelectorAll('.legal-modal-overlay').forEach(overlay => {
+      overlay.querySelector('.legal-modal-close').addEventListener('click', () => closeModal(overlay));
+      overlay.querySelector('.legal-modal-footer button').addEventListener('click', () => closeModal(overlay));
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay); });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.legal-modal-overlay.open').forEach(o => closeModal(o));
+      }
+    });
+  })();
 
   /* ── FAQ accordion ── */
   document.querySelectorAll('.faq-question').forEach(btn => {
