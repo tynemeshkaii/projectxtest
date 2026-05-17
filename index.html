@@ -1117,40 +1117,34 @@
     }
     .live-count { color: var(--text); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
-    /* ─── Exchange logos ─── */
-    .exchange-logos {
+    /* ─── Exchange logos carousel ─── */
+    .exchanges-carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.25rem;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    }
+    .exchanges-track {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.625rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
+      gap: 3.5rem;
+      width: max-content;
+      padding: 0.75rem 0;
+      animation: scroll-left 22s linear infinite;
     }
-    .exchange-logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.375rem 0.875rem;
-      border-radius: 8px;
-      font-size: 0.8125rem;
-      font-weight: 700;
-      border: 1px solid;
-      letter-spacing: 0.01em;
-      transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
-      user-select: none;
+    .exchanges-track:hover { animation-play-state: paused; }
+    .ex-item { flex-shrink: 0; display: flex; align-items: center; }
+    .ex-item img {
+      height: 26px;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      opacity: 0.55;
+      transition: opacity 0.3s;
+      filter: grayscale(0.15);
     }
-    .exchange-logo:hover { transform: translateY(-2px); }
-    .exchange-logo svg { flex-shrink: 0; }
-    .exchange-logo.binance { color: #F3BA2F; border-color: rgba(243,186,47,0.35); background: rgba(243,186,47,0.07); }
-    .exchange-logo.binance:hover { box-shadow: 0 4px 16px rgba(243,186,47,0.2); }
-    .exchange-logo.bybit   { color: #F7A600; border-color: rgba(247,166,0,0.35);  background: rgba(247,166,0,0.07);  }
-    .exchange-logo.bybit:hover   { box-shadow: 0 4px 16px rgba(247,166,0,0.2); }
-    .exchange-logo.okx     { color: #e2e8f0; border-color: rgba(226,232,240,0.22); background: rgba(226,232,240,0.05); }
-    .exchange-logo.okx:hover     { box-shadow: 0 4px 16px rgba(226,232,240,0.1); }
-    .exchange-logo.bingx   { color: #29b6f6; border-color: rgba(41,182,246,0.35); background: rgba(41,182,246,0.07); }
-    .exchange-logo.bingx:hover   { box-shadow: 0 4px 16px rgba(41,182,246,0.2); }
-    .exchange-logo.bitget  { color: #00e5cc; border-color: rgba(0,229,204,0.35);  background: rgba(0,229,204,0.07);  }
-    .exchange-logo.bitget:hover  { box-shadow: 0 4px 16px rgba(0,229,204,0.2); }
+    .ex-item:hover img { opacity: 1; filter: none; }
   </style>
 </head>
 <body>
@@ -1334,26 +1328,18 @@
     <div class="section-header reveal">
       <h2>Результаты наших сигналов</h2>
       <p>Реальные сделки — реальная прибыль. Скриншоты прямо с биржи</p>
-      <div class="exchange-logos" aria-label="Поддерживаемые биржи">
-        <div class="exchange-logo binance">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3L14 5 12 7 10 5zM7 8L9 6l3 3-3 3-2-2zM17 8L15 6l-3 3 3 3 2-2zM12 11l2 2-2 2-2-2zM7 16l2 2 3-3-3-3-2 2zM17 16l-2 2-3-3 3-3 2 2zM12 17l2 2-2 2-2-2z"/></svg>
-          Binance
-        </div>
-        <div class="exchange-logo bybit">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="3" width="3" height="18" rx="1"/><path d="M7 3h7a4 4 0 0 1 0 8H7V3z"/><path d="M7 12h7.5a4.5 4.5 0 0 1 0 9H7v-9z"/></svg>
-          Bybit
-        </div>
-        <div class="exchange-logo okx">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="15" y="2" width="7" height="7" rx="1"/><rect x="8.5" y="8.5" width="7" height="7" rx="1"/><rect x="2" y="15" width="7" height="7" rx="1"/><rect x="15" y="15" width="7" height="7" rx="1"/></svg>
-          OKX
-        </div>
-        <div class="exchange-logo bingx">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="5" width="20" height="2.5" rx="1.25"/><rect x="2" y="10.75" width="20" height="2.5" rx="1.25"/><rect x="2" y="16.5" width="20" height="2.5" rx="1.25"/></svg>
-          BingX
-        </div>
-        <div class="exchange-logo bitget">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 3a7 7 0 0 1 6.93 6H12V8.5h5a4.5 4.5 0 0 0-9 0V12H5.07A7 7 0 0 1 12 5z"/></svg>
-          Bitget
+      <div class="exchanges-carousel-wrapper" aria-label="Поддерживаемые биржи">
+        <div class="exchanges-track">
+          <div class="ex-item"><img src="logos/binance.svg" alt="Binance"></div>
+          <div class="ex-item"><img src="logos/Bybit_Logo.svg" alt="Bybit"></div>
+          <div class="ex-item"><img src="logos/OKX_logo.svg" alt="OKX"></div>
+          <div class="ex-item"><img src="logos/1752827647-bingxlogo.svg" alt="BingX"></div>
+          <div class="ex-item"><img src="logos/Logo_Biget.svg.png" alt="Bitget"></div>
+          <div class="ex-item" aria-hidden="true"><img src="logos/binance.svg" alt=""></div>
+          <div class="ex-item" aria-hidden="true"><img src="logos/Bybit_Logo.svg" alt=""></div>
+          <div class="ex-item" aria-hidden="true"><img src="logos/OKX_logo.svg" alt=""></div>
+          <div class="ex-item" aria-hidden="true"><img src="logos/1752827647-bingxlogo.svg" alt=""></div>
+          <div class="ex-item" aria-hidden="true"><img src="logos/Logo_Biget.svg.png" alt=""></div>
         </div>
       </div>
       <div class="section-divider" aria-hidden="true"></div>
