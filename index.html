@@ -15,14 +15,16 @@
   <meta property="og:site_name" content="Boyko Trading">
   <meta property="og:title" content="Boyko Trading — 3-5 сигналов в день с точностью 92%">
   <meta property="og:description" content="Бесплатные торговые сигналы с готовыми точками входа. Просто открой сделку — аналитику мы сделали за тебя.">
-  <meta property="og:image" content="https://boykotrading.ru/trades/2026-05-17%2009.23.39.jpg.webp">
+  <meta property="og:image" content="https://boykotrading.ru/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Boyko Trading — 3-5 сигналов в день с точностью 92%">
   <meta property="og:locale" content="ru_RU">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Boyko Trading — 3-5 сигналов в день с точностью 92%">
   <meta name="twitter:description" content="Бесплатные торговые сигналы с готовыми точками входа.">
-  <meta name="twitter:image" content="https://boykotrading.ru/trades/2026-05-17%2009.23.39.jpg.webp">
+  <meta name="twitter:image" content="https://boykotrading.ru/og-image.jpg">
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -39,15 +41,15 @@
       --bg-secondary: #172b20;
       --bg-section-alt: #0c1510;
       --text: #f0fdf4;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      /* Тёплые зеленовато-серые оттенки — в гармонии с зелёной палитрой, контраст ≥ AA */
+      --text-muted: #a6b8af;
+      --text-dim: #8a9c92;
       --primary: #10b981;
       --primary-light: #34d399;
       --primary-dark: #059669;
       --primary-glow: rgba(16, 185, 129, 0.35);
       --accent: #fbbf24;
       --accent-glow: rgba(251, 191, 36, 0.25);
-      --violet: #818cf8;
       --border: rgba(16, 185, 129, 0.12);
       --border-hover: rgba(16, 185, 129, 0.3);
       --radius: 1rem;
@@ -148,6 +150,19 @@
       0%, 100% { opacity: 0.5; transform: scale(1); }
       50% { opacity: 0.8; transform: scale(1.04); }
     }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Скелет-заглушка под изображения, пока они грузятся (видна только до загрузки) */
+    .media-skeleton {
+      background-color: var(--bg-secondary);
+      background-image: linear-gradient(100deg, transparent 20%, rgba(52,211,153,0.08) 40%, rgba(52,211,153,0.14) 50%, rgba(52,211,153,0.08) 60%, transparent 80%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.6s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) { .media-skeleton { animation: none; } }
 
     .animate-fade-up {
       opacity: 0;
@@ -191,6 +206,22 @@
       transition: transform 0.3s var(--ease-out);
     }
     .btn-primary:hover svg:last-child { transform: translateX(4px); }
+    /* Блик, пробегающий по кнопке при наведении (не для .pulse — там свечение выходит за края) */
+    .btn-primary:not(.pulse) { position: relative; overflow: hidden; }
+    .btn-primary:not(.pulse)::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.28), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.6s var(--ease-out);
+      pointer-events: none;
+    }
+    .btn-primary:not(.pulse):hover::before { left: 130%; }
+    @media (prefers-reduced-motion: reduce) { .btn-primary:not(.pulse)::before { display: none; } }
 
     /* Hero-only pulse — через псевдоэлемент (compositor-only opacity, не box-shadow) */
     .btn-primary.pulse {
@@ -241,9 +272,15 @@
       padding: 1rem 0;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      background: rgba(8, 14, 11, 0.88);
-      border-bottom: 1px solid var(--border);
-      transition: all 0.3s;
+      background: rgba(8, 14, 11, 0.72);
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    /* Чёткое отделение от контента после прокрутки */
+    .header.scrolled {
+      background: rgba(8, 14, 11, 0.96);
+      border-bottom-color: var(--border-hover);
+      box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
     }
     .header-inner {
       display: flex;
@@ -283,6 +320,9 @@
       align-items: center;
       padding: 7rem 0 5rem;
       overflow: hidden;
+    }
+    @media (max-width: 767px) {
+      .hero { min-height: auto; padding: 5.5rem 0 3rem; }
     }
 
     /* Gradient background — stronger */
@@ -416,7 +456,7 @@
     }
     @media (max-width: 767px) {
       .hero-photo-wrap { display: none; }
-      .hero-photo-wrap.has-photo { display: flex; order: -1; }
+      .hero-photo-wrap.has-photo { display: flex; order: -1; margin-bottom: 0.5rem; }
     }
 
     /* Glow ring behind photo */
@@ -446,6 +486,11 @@
     }
     .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
     @media (min-width: 768px) { .hero-photo { width: 320px; height: 320px; } }
+    /* Мобайл: компактнее, чтобы заголовок попадал в первый экран (после базовых правил — иначе перекроются) */
+    @media (max-width: 767px) {
+      .hero-photo { width: 188px; height: 188px; }
+      .hero-photo-glow { width: 230px; height: 230px; }
+    }
 
     /* Trust pills */
     .trust-pills {
@@ -514,7 +559,7 @@
 
     /* ─── Sections ─── */
     .section {
-      padding: 5rem 0;
+      padding: 3.5rem 0;
       position: relative;
     }
     .section-alt {
@@ -522,7 +567,7 @@
     }
     .section-header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2.25rem;
     }
     .section-header h2 {
       font-size: clamp(1.875rem, 4vw, 2.875rem);
@@ -549,9 +594,17 @@
       margin-top: 2.5rem;
     }
 
+    /* Плотнее вертикальные отступы на мобильных */
+    @media (max-width: 767px) {
+      .section, .results-section { padding: 2.75rem 0; }
+      .section-header { margin-bottom: 1.75rem; }
+      .final-cta { padding: 3.5rem 0; }
+      .section-cta { margin-top: 1.75rem; }
+    }
+
     /* ─── Results carousel ─── */
     .results-section {
-      padding: 5rem 0;
+      padding: 3.5rem 0;
       background: linear-gradient(180deg, var(--bg) 0%, rgba(16,185,129,0.025) 50%, var(--bg) 100%);
       overflow: hidden;
     }
@@ -573,7 +626,34 @@
       border: 1px solid var(--border);
       border-radius: 6px;
     }
-    .results-track-wrapper { overflow: hidden; margin: 0 -1.25rem; }
+    /* Бейджи доверия */
+    .verified-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+      margin-top: 1.25rem;
+    }
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+    }
+    .verified-badge svg { width: 0.95rem; height: 0.95rem; flex-shrink: 0; color: var(--primary-light); }
+
+    .results-track-wrapper {
+      overflow: hidden;
+      margin: 0 -1.25rem;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    }
     .results-track {
       display: flex;
       gap: 1rem;
@@ -624,7 +704,7 @@
     /* Animated gradient border wrapper */
     .tg-preview-border {
       max-width: 424px;
-      margin: 0 auto 4rem;
+      margin: 0 auto;
       padding: 2px;
       border-radius: calc(var(--radius-lg) + 2px);
       background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary-dark), var(--primary));
@@ -675,7 +755,12 @@
     .tg-msg-time { font-size: 0.625rem; color: var(--text-dim); text-align: right; margin-top: 0.375rem; }
 
     /* Client results */
-    .client-results-track-wrapper { overflow: hidden; margin: 0 -1.25rem; }
+    .client-results-track-wrapper {
+      overflow: hidden;
+      margin: 0 -1.25rem;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    }
     .client-results-track {
       display: flex;
       gap: 1rem;
@@ -703,11 +788,14 @@
 
     /* ─── Steps ─── */
     .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 2rem;
     }
     .step-card {
+      flex: 1 1 280px;
+      max-width: 380px;
       position: relative;
       padding: 2.25rem 2rem;
       background: var(--bg-card);
@@ -747,6 +835,29 @@
     }
     .step-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
     .step-card p { font-size: 0.9375rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* Мобайл: компактная горизонтальная раскладка вместо высокой колонки */
+    @media (max-width: 767px) {
+      .step-card {
+        max-width: none;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 1rem;
+        row-gap: 0.25rem;
+        align-items: center;
+        text-align: left;
+        padding: 1.5rem 1.5rem;
+      }
+      .step-card .step-number {
+        grid-row: 1 / span 2;
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.0625rem;
+        margin-bottom: 0;
+      }
+      .step-card h3 { margin-bottom: 0; align-self: end; }
+      .step-card p { align-self: start; }
+    }
 
     /* ─── Features Bento Grid — mobile-first ─── */
     /* Мобайл (default): 1 колонка */
@@ -852,13 +963,15 @@
 
     /* ─── Testimonials ─── */
     .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 1.25rem;
     }
-    @media (max-width: 767px) { .testimonials-grid { grid-template-columns: 1fr; } }
 
     .testimonial-card {
+      flex: 1 1 300px;
+      max-width: 400px;
       padding: 1.75rem;
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -867,10 +980,8 @@
       position: relative;
       overflow: hidden;
     }
-    /* Colored top border per card */
-    .testimonial-card:nth-child(1) { border-top: 3px solid var(--primary); }
-    .testimonial-card:nth-child(2) { border-top: 3px solid var(--accent); }
-    .testimonial-card:nth-child(3) { border-top: 3px solid var(--violet); }
+    /* Единый брендовый верхний бордер на всех карточках */
+    .testimonial-card { border-top: 3px solid var(--primary); }
 
     /* Noise overlay */
     .testimonial-card::after {
@@ -896,8 +1007,6 @@
       font-family: Georgia, serif;
       pointer-events: none;
     }
-    .testimonial-card:nth-child(2)::before { color: var(--accent); }
-    .testimonial-card:nth-child(3)::before { color: var(--violet); }
 
     .testimonial-card:hover {
       border-color: var(--border-hover);
@@ -931,8 +1040,6 @@
       object-fit: cover;
       display: block;
     }
-    .testimonial-card:nth-child(2) .testimonial-avatar { color: var(--accent); }
-    .testimonial-card:nth-child(3) .testimonial-avatar { color: var(--violet); }
 
     .testimonial-stars { display: flex; gap: 0.125rem; }
     .testimonial-stars svg { width: 0.875rem; height: 0.875rem; fill: var(--accent); color: var(--accent); }
@@ -1002,7 +1109,7 @@
     /* ─── Final CTA ─── */
     .final-cta {
       text-align: center;
-      padding: 6rem 0;
+      padding: 4.5rem 0;
       position: relative;
       overflow: hidden;
     }
@@ -1324,10 +1431,10 @@
       display: block;
       object-fit: contain;
       opacity: 0.7;
-      transition: opacity 0.3s, filter 0.3s;
+      transition: opacity 0.3s, transform 0.3s var(--ease-out), filter 0.3s;
       filter: brightness(0) invert(1);
     }
-    .ex-item:hover img { opacity: 1; }
+    .ex-item:hover img { opacity: 1; transform: scale(1.08); }
   </style>
 </head>
 <body>
@@ -1446,7 +1553,7 @@
       </div>
     </div>
     <div class="section-cta reveal">
-      <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary">
+      <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-ghost">
         <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         Забрать сигнал бесплатно
       </a>
@@ -1515,6 +1622,20 @@
           <div class="ex-item" aria-hidden="true"><img src="logos/1752827647-bingxlogo.svg" alt=""></div>
           <div class="ex-item" aria-hidden="true"><img src="logos/Logo_Biget.svg.png" alt=""></div>
         </div>
+      </div>
+      <div class="verified-row">
+        <span class="verified-badge">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          Проверенные результаты
+        </span>
+        <span class="verified-badge">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          Скриншоты прямо с бирж
+        </span>
+        <span class="verified-badge">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          Обновляются ежедневно
+        </span>
       </div>
       <div class="section-divider" aria-hidden="true"></div>
     </div>
@@ -1660,7 +1781,7 @@
     </div>
   </div>
   <div class="container section-cta reveal">
-    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary">
+    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-ghost">
       <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
       Забрать сигнал бесплатно
     </a>
@@ -1698,7 +1819,7 @@
     </div>
   </div>
   <div class="container section-cta reveal">
-    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-primary">
+    <a href="https://t.me/CryptoLabChannel_bot?start=lltscCVDkRZH8Gt2xztH4A" target="_blank" rel="noopener noreferrer" class="btn-ghost">
       <svg class="tg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
       Забрать сигнал бесплатно
     </a>
@@ -2090,6 +2211,33 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ── Header: отделение от контента при прокрутке ── */
+  (function () {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    let ticking = false;
+    function apply() {
+      header.classList.toggle('scrolled', window.scrollY > 12);
+      ticking = false;
+    }
+    apply();
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+  })();
+
+  /* ── Скелет-заглушки для изображений каруселей ── */
+  (function () {
+    const imgs = document.querySelectorAll('.result-card-img, .client-result-card img');
+    imgs.forEach(img => {
+      if (img.complete && img.naturalWidth > 0) return;
+      img.classList.add('media-skeleton');
+      const clear = () => img.classList.remove('media-skeleton');
+      img.addEventListener('load', clear, { once: true });
+      img.addEventListener('error', clear, { once: true });
+    });
+  })();
+
   /* ── Exchange logos carousel (RAF-driven, pauses when off-screen) ── */
   (function () {
     const wrapper = document.querySelector('.exchanges-carousel-wrapper');
@@ -2166,12 +2314,18 @@
   /* ── Animated counters ── */
   function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
+  // Группировка тысяч узким пробелом — в моноширинном шрифте обычный/неразрывный
+  // пробел выглядит как двойной разрыв («5  247»). Узкий пробел смотрится аккуратно.
+  function fmtNum(n) {
+    return n.toLocaleString('ru-RU').replace(/[   ]/g, ' ');
+  }
+
   function animateCounter(el) {
     const target   = parseFloat(el.dataset.target);
     const suffix   = el.dataset.suffix || '';
 
     if (prefersReducedMotion) {
-      el.textContent = target.toLocaleString('ru-RU') + suffix;
+      el.textContent = fmtNum(target) + suffix;
       return;
     }
 
@@ -2180,7 +2334,7 @@
 
     function update(now) {
       const progress = Math.min((now - start) / duration, 1);
-      el.textContent = Math.round(easeOutCubic(progress) * target).toLocaleString('ru-RU') + suffix;
+      el.textContent = fmtNum(Math.round(easeOutCubic(progress) * target)) + suffix;
       if (progress < 1) requestAnimationFrame(update);
     }
     requestAnimationFrame(update);
